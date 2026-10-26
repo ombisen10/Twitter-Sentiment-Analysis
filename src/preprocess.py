@@ -100,10 +100,25 @@ class TweetPreprocessor:
             self.lemmatizer = None
 
     def expand_contractions(self, text: str) -> str:
-        """Expands informal English contractions and Twitter slang."""
-        words = text.split()
-        expanded = [CONTRACTIONS.get(w.lower(), w) for w in words]
-        return " ".join(expanded)
+        """Expands informal English contractions and Twitter slang.
+
+        Uses word-boundary-aware regex so punctuation-adjacent forms
+        like "don't,", "(can't)" or "Won't!" expand reliably.
+        """
+        if not isinstance(text, str) or not text:
+            return text
+        # Longest keys first so "can't've" matches before "can't".
+        pattern = re.compile(
+            r"(?<!\w)(" + "|".join(
+                re.escape(k) for k in sorted(CONTRACTIONS, key=len, reverse=True)
+            ) + r")(?!\w)",
+            flags=re.IGNORECASE,
+        )
+
+        def _repl(m: re.Match) -> str:
+            return CONTRACTIONS[m.group(0).lower()]
+
+        return pattern.sub(_repl, text)
 
     def clean_text(self, text: str) -> str:
         """Removes social media artifacts and sanitizes string."""

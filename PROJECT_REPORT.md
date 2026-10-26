@@ -130,50 +130,64 @@ Hyperparameter optimization was conducted via 3-fold cross-validation using `Gri
 
 ### 6.1 Benchmark Results Table
 
-| Algorithm | Accuracy | Precision | Recall | F1-Score | ROC-AUC | Train Time (s) |
-|---|---|---|---|---|---|---|
-| **Custom Naive Bayes (Scratch)** | **0.7580** | **0.7525** | **0.7710** | **0.7616** | **0.8350** | 0.038 s |
-| **Multinomial NB (Sklearn)** | **0.7580** | **0.7525** | **0.7710** | **0.7616** | **0.8350** | 0.012 s |
-| **Logistic Regression** | **0.7695** | **0.7642** | **0.7810** | **0.7725** | **0.8490** | 0.085 s |
-| **Support Vector Machine (Linear)** | **0.7610** | **0.7554** | **0.7730** | **0.7641** | **0.8410** | 0.092 s |
-| **Random Forest Classifier** | **0.7250** | **0.7280** | **0.7180** | **0.7230** | **0.7980** | 0.850 s |
+Verified on the held-out stratified 80/20 split (train 7,995 / test 1,999, seed 42,
+TF-IDF 5,000 unigrams+bigrams fit on train only). Positive class = 1.
 
-*(Note: Custom Naive Bayes exactly replicates Scikit-Learn Multinomial NB to all decimal places, confirming 100% mathematical correctness).*
+| Algorithm | Accuracy | Precision | Recall | F1-Score | ROC-AUC |
+|---|---|---|---|---|---|
+| **Custom Naive Bayes (Scratch)** | **0.9455** | **0.9724** | **0.9169** | **0.9438** | **0.9905** |
+| **Multinomial NB (Sklearn)** | **0.9455** | **0.9724** | **0.9169** | **0.9438** | **0.9905** |
+| **Logistic Regression** | **0.9950** | **0.9940** | **0.9960** | **0.9950** | **0.9997** |
+| **Support Vector Machine (Linear)** | **0.9960** | **0.9940** | **0.9980** | **0.9960** | **0.9996** |
+| **Random Forest Classifier** | **0.9960** | **0.9940** | **0.9980** | **0.9960** | **0.9996** |
+
+*(Custom Naive Bayes exactly replicates Scikit-Learn Multinomial NB, confirming mathematical correctness.
+Scratch confusion matrix on the test set: TN=974, FP=26, FN=83, TP=916, N=1,999.)*
+
+> **Validity note (read in viva):** accuracy is high partly because emoticon tokens
+> (`sentimentpositive`/`sentimentnegative`) are strongly label-correlated in the NLTK
+> Twitter corpus (≈96% of positives contain `:)`, ≈99% of negatives contain `:(`).
+> 6 rows were empty after cleaning (10,000 → 9,994); 988 cleaned texts are duplicated
+> and 118 distinct texts appear on both sides of the train/test split. One cleaned
+> text (`"true"`) carries both labels. These limitations are documented rather than
+> hidden by resampling.
 
 ### 6.2 Step-by-Step Manual Metric Calculation
 To satisfy Rubric Criterion 6, we demonstrate the manual calculation for the test split confusion matrix:
 
-**Sample Confusion Matrix Counts ($N = 2000$):**
-- True Negatives ($TN$): $747$
-- False Positives ($FP$): $253$
-- False Negatives ($FN$): $229$
-- True Positives ($TP$): $771$
+**Sample Confusion Matrix Counts ($N = 1999$, Scratch NB on held-out test):**
+- True Negatives ($TN$): $974$
+- False Positives ($FP$): $26$
+- False Negatives ($FN$): $83$
+- True Positives ($TP$): $916$
 
 **Arithmetic Calculations:**
 
 1. **Accuracy:**
-   $$\text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN} = \frac{771 + 747}{2000} = \frac{1518}{2000} = \mathbf{0.7590} \; (75.90\%)$$
+   $$\text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN} = \frac{916 + 974}{1999} = \frac{1890}{1999} = \mathbf{0.9455} \; (94.55\%)$$
 
 2. **Precision:**
-   $$\text{Precision} = \frac{TP}{TP + FP} = \frac{771}{771 + 253} = \frac{771}{1024} = \mathbf{0.7529} \; (75.29\%)$$
+   $$\text{Precision} = \frac{TP}{TP + FP} = \frac{916}{916 + 26} = \frac{916}{942} = \mathbf{0.9724} \; (97.24\%)$$
 
 3. **Recall (Sensitivity):**
-   $$\text{Recall} = \frac{TP}{TP + FN} = \frac{771}{771 + 229} = \frac{771}{1000} = \mathbf{0.7710} \; (77.10\%)$$
+   $$\text{Recall} = \frac{TP}{TP + FN} = \frac{916}{916 + 83} = \frac{916}{999} = \mathbf{0.9169} \; (91.69\%)$$
 
 4. **Specificity (True Negative Rate):**
-   $$\text{Specificity} = \frac{TN}{TN + FP} = \frac{747}{747 + 253} = \frac{747}{1000} = \mathbf{0.7470} \; (74.70\%)$$
+   $$\text{Specificity} = \frac{TN}{TN + FP} = \frac{974}{974 + 26} = \frac{974}{1000} = \mathbf{0.9740} \; (97.40\%)$$
 
 5. **F1-Score:**
-   $$\text{F1} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} = 2 \times \frac{0.7529 \times 0.7710}{0.7529 + 0.7710} = \frac{1.16097}{1.5239} = \mathbf{0.7618}$$
+   $$\text{F1} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} = 2 \times \frac{0.9724 \times 0.9169}{0.9724 + 0.9169} = \frac{1.7832}{1.8893} = \mathbf{0.9438}$$
 
-**Verification:** Manual calculations match the automated scikit-learn outputs.
+**Verification:** `verify_manual_metrics()` compares these hand calculations against
+scikit-learn within tolerance 1e-9 and reports MATCHED per metric; see
+`src/models.py`. The live Manual Proof tab recomputes the same formulas in JS.
 
 ---
 
 ## 7. Comparative Analysis (10 Points)
-- **Scratch Naive Bayes vs. Sklearn:** Identical classification performance confirms that our custom prior calculations, smoothing, and log probability matrices are numerically identical to scikit-learn's optimized C-backend implementation.
-- **Logistic Regression Performance:** Logistic Regression achieved the highest overall F1-score ($0.7725$) and ROC-AUC ($0.8490$). The smooth sigmoid loss function effectively weights subtle sentiment polarities without suffering from the independence assumption of Naive Bayes.
-- **Tree Ensembles on Sparse Text:** Random Forest exhibited lower performance ($0.7250$) and significantly higher training time ($0.85$s). Tree-based recursive splits struggle on high-dimensional, sparse TF-IDF spaces (5,000 dimensions) compared to convex linear classifiers.
+- **Scratch Naive Bayes vs. Sklearn:** Identical classification performance confirms that our custom prior calculations, smoothing, and log probability matrices are numerically identical to scikit-learn's implementation.
+- **Logistic Regression Performance:** Logistic Regression achieved 0.9950 accuracy / 0.9950 F1 and 0.9997 ROC-AUC. Linear separators excel in the sparse 5,000-dim TF-IDF space, but much of the signal comes from emoticon tokens (see validity note in §6.1) — quote this limitation in the viva.
+- **Tree Ensembles on Sparse Text:** Random Forest matched linear models here (0.9960) at far higher training cost; trees remain less efficient for sparse text and add no accuracy gain.
 
 ---
 

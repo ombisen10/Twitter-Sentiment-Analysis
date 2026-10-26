@@ -144,18 +144,27 @@ def plot_roc_curves(results_dict: Dict[str, dict], y_test: np.ndarray, save_path
 
     for idx, (name, data) in enumerate(results_dict.items()):
         model = data["model"]
+        scores = None
         if hasattr(model, "predict_proba"):
-            probs = model.predict_proba(data.get("X_test_vec", None))[:, 1] if "X_test_vec" in data else None
+            try:
+                classes = list(getattr(model, "classes_", [0, 1]))
+                pos_idx = classes.index(1) if 1 in classes else 1
+                scores = model.predict_proba(data.get("X_test_vec", None))[:, pos_idx]
+            except Exception:
+                scores = None
         elif hasattr(model, "decision_function"):
-            probs = model.decision_function(data.get("X_test_vec", None)) if "X_test_vec" in data else None
-        else:
-            probs = data["predictions"]
+            try:
+                scores = model.decision_function(data.get("X_test_vec", None))
+            except Exception:
+                scores = None
+        if scores is None:
+            scores = data["predictions"]
 
-        # If stored in dict directly
-        if "roc_auc" in data:
-            # Fallback to computing from predictions if matrix wasn't stored
-            fpr, tpr, _ = roc_curve(y_test, data["predictions"])
-            plt.plot(fpr, tpr, label=f"{name} (AUC = {data['roc_auc']:.3f})", linewidth=2.2)
+        fpr, tpr, _ = roc_curve(y_test, scores)
+        # Recompute AUC from the same scores used for the curve so the
+        # legend value always matches the plotted line.
+        auc_val = auc(fpr, tpr)
+        plt.plot(fpr, tpr, label=f"{name} (AUC = {auc_val:.3f})", linewidth=2.2)
 
     plt.plot([0, 1], [0, 1], 'k--', label="Random Baseline (AUC = 0.500)", alpha=0.7)
     plt.xlim([0.0, 1.0])

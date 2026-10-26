@@ -170,7 +170,11 @@ def run_pipeline():
     # ---------------------------------------------------------
     print("\n[STEP 6/9] Generating Step-by-Step Manual Evaluation Metric Calculations...")
     sample_cm = trainer.results["Custom Naive Bayes (Scratch)"]["confusion_matrix"]
-    manual_calc_str = manual_metrics_calculation_report(sample_cm, "Custom Multinomial Naive Bayes (Scratch)")
+    sample_preds = trainer.results["Custom Naive Bayes (Scratch)"]["predictions"]
+    manual_calc_str = manual_metrics_calculation_report(
+        sample_cm, "Custom Multinomial Naive Bayes (Scratch)",
+        y_true=y_test, y_pred=sample_preds,
+    )
     print(manual_calc_str)
 
     # ---------------------------------------------------------

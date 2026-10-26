@@ -1,6 +1,6 @@
 Algorithm,Accuracy,Precision,Recall,F1-Score,ROC-AUC,Train Time (s),Inference Time (s)
-Custom Naive Bayes (Scratch),0.9455,0.9734,0.9159,0.9438,0.9905,0.0006,0.0001
-Multinomial Naive Bayes (Sklearn),0.9455,0.9734,0.9159,0.9438,0.9905,0.0016,0.0002
-Logistic Regression,0.995,0.994,0.996,0.995,0.9997,0.0124,0.0006
-Support Vector Machine (Linear),0.996,0.994,0.998,0.996,0.9996,0.0102,0.0003
-Random Forest,0.996,0.994,0.998,0.996,0.9996,0.3337,0.0183
+Custom Naive Bayes (Scratch),0.9455,0.9724,0.9169,0.9438,0.9905,0.004,0.0
+Multinomial Naive Bayes (Sklearn),0.9455,0.9724,0.9169,0.9438,0.9905,0.0045,0.0016
+Logistic Regression,0.995,0.994,0.996,0.995,0.9997,0.0475,0.0011
+Support Vector Machine (Linear),0.996,0.994,0.998,0.996,0.9996,0.0478,0.0018
+Random Forest,0.996,0.993,0.999,0.996,0.9996,1.3868,0.1517

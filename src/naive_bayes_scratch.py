@@ -93,8 +93,12 @@ class MultinomialNaiveBayesScratch:
         Calculates posterior unnormalized log probabilities:
         log P(Y = c | X) = log P(Y = c) + X * (feature_log_prob_)^T
         """
-        if self.feature_log_prob_ is None:
+        if self.feature_log_prob_ is None or self.class_log_priors_ is None:
             raise ValueError("Model is not fitted yet. Call fit() before predicting.")
+        if X.shape[1] != self.n_features_in_:
+            raise ValueError(
+                f"Feature dimension mismatch: expected {self.n_features_in_}, got {X.shape[1]}."
+            )
 
         # X is (n_samples, n_features)
         # feature_log_prob_ is (n_classes, n_features)

@@ -92,3 +92,34 @@ python main.py
 ```bash
 jupyter notebook twitter_sentiment_analysis.ipynb
 ```
+
+### 4. Run the Web App
+```bash
+python app.py
+# open http://127.0.0.1:5000/
+```
+
+### 5. Run Tests
+```bash
+python -m pytest tests/ -q
+```
+
+## API Contract (`POST /api/predict`)
+
+Request: `{ "text": "I love this!" }` (string, 1–2000 chars).
+Success returns `sentiment` (Positive/Negative), `polarity` (1/0),
+`confidence` = mean winning-class probability across the 3 live models
+(uncalibrated average, not a calibrated certainty), `agreement` (e.g. `2/3`),
+per-model predictions + `pos_prob`/`neg_prob`, `avg_pos_prob`/`avg_neg_prob`,
+`inference_ms` (server-side model time), and optional `warning` for
+low-confidence (<60%) or empty-after-cleaning inputs.
+Errors return `{ "error": "..." }` with 400/413/503.
+
+## Validity Note
+
+Held-out test (80/20, seed 42, N=1,999): Scratch NB 94.55%, LR 99.50%,
+Linear SVC / RF 99.60%. Accuracy is inflated by emoticon tokens
+(`sentimentpositive`/`sentimentnegative`) that are strongly label-correlated
+in the NLTK corpus. 10,000 → 9,994 rows after cleaning; 988 cleaned duplicates
+(118 overlap train/test); one cleaned text (`true`) has both labels.
+Documented, not hidden.

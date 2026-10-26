@@ -241,28 +241,28 @@ add_md("""---
 *"Must include at least one manual calculation for one example."*
 
 We extract the test set confusion matrix for our Custom Naive Bayes model:
-- **True Positives ($TP$):** 915
-- **False Positives ($FP$):** 25
-- **False Negatives ($FN$):** 84
-- **True Negatives ($TN$):** 975
+- **True Positives ($TP$):** 916
+- **False Positives ($FP$):** 26
+- **False Negatives ($FN$):** 83
+- **True Negatives ($TN$):** 974
 - **Total Test Samples ($N$):** 1,999
 
 ### Step-by-Step Mathematical Formulations:
 
 1. **Accuracy:**
-   $$\\text{Accuracy} = \\frac{TP + TN}{TP + TN + FP + FN} = \\frac{915 + 975}{1999} = \\frac{1890}{1999} = \\mathbf{0.9455} \\; (94.55\\%)$$
+   $$\\text{Accuracy} = \\frac{TP + TN}{TP + TN + FP + FN} = \\frac{916 + 974}{1999} = \\frac{1890}{1999} = \\mathbf{0.9455} \\; (94.55\\%)$$
 
 2. **Precision (Positive Predictive Value):**
-   $$\\text{Precision} = \\frac{TP}{TP + FP} = \\frac{915}{915 + 25} = \\frac{915}{940} = \\mathbf{0.9734} \\; (97.34\\%)$$
+   $$\\text{Precision} = \\frac{TP}{TP + FP} = \\frac{916}{916 + 26} = \\frac{916}{942} = \\mathbf{0.9724} \\; (97.24\\%)$$
 
 3. **Recall (Sensitivity / True Positive Rate):**
-   $$\\text{Recall} = \\frac{TP}{TP + FN} = \\frac{915}{915 + 84} = \\frac{915}{999} = \\mathbf{0.9159} \\; (91.59\\%)$$
+   $$\\text{Recall} = \\frac{TP}{TP + FN} = \\frac{916}{916 + 83} = \\frac{916}{999} = \\mathbf{0.9169} \\; (91.69\\%)$$
 
 4. **Specificity (True Negative Rate):**
-   $$\\text{Specificity} = \\frac{TN}{TN + FP} = \\frac{975}{975 + 25} = \\frac{975}{1000} = \\mathbf{0.9750} \\; (97.50\\%)$$
+   $$\\text{Specificity} = \\frac{TN}{TN + FP} = \\frac{974}{974 + 26} = \\frac{974}{1000} = \\mathbf{0.9740} \\; (97.40\\%)$$
 
 5. **F1-Score:**
-   $$\\text{F1-Score} = 2 \\times \\frac{\\text{Precision} \\times \\text{Recall}}{\\text{Precision} + \\text{Recall}} = 2 \\times \\frac{0.9734 \\times 0.9159}{0.9734 + 0.9159} = \\frac{1.783113}{1.8893} = \\mathbf{0.9438}$$
+   $$\\text{F1-Score} = 2 \\times \\frac{\\text{Precision} \\times \\text{Recall}}{\\text{Precision} + \\text{Recall}} = 2 \\times \\frac{0.9724 \\times 0.9169}{0.9724 + 0.9169} = \\frac{1.7832}{1.8893} = \\mathbf{0.9438}$$
 """)
 
 add_code("""from src.models import manual_metrics_calculation_report
